@@ -34,9 +34,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // ถ้าเกมจบแล้ว ไม่ต้องให้ผู้เล่นขยับ
         if(isGameOver) return;
-        
         if (isBoosted)
         {
             boostTimeRemaining -= Time.deltaTime;
@@ -48,8 +46,7 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = moveAction.ReadValue<Vector2>().x;
         transform.Translate(horizontalInput * currentSpeed * Time.deltaTime * Vector3.right);
         
-        // จำกัดขอบเขตการเคลื่อนที่ของผู้เล่น (ไม่ให้ออกนอกจอ)
-        float xRange = 4.5f; // ขอบเขตซ้าย-ขวา
+        float xRange = 4.5f;
         if (transform.position.x < -xRange)
         {
             transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
@@ -63,7 +60,6 @@ public class PlayerController : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        // ถ้าชนกับวัตถุที่มี tag "Obstacle" ให้จบเกม
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             isGameOver = true;
@@ -74,13 +70,11 @@ public class PlayerController : MonoBehaviour
 
     public void ActivateBooster(float boostForce, float duration)
     {
-        // คำนวณความเร็วใหม่จากแรง Boost และมวล (F=ma)
         float acceleration = boostForce / currentMass;
         currentSpeed = speed + acceleration;
         isBoosted = true;
         boostTimeRemaining = duration;
         
-        // หาวัตถุทั้งหมดที่มีสคริปต์ MoveBack และเพิ่มความเร็วพวกนั้นด้วย
         MoveBack[] movingObjects = FindObjectsByType<MoveBack>(FindObjectsSortMode.None);
         foreach (MoveBack obj in movingObjects)
         {

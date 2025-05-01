@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CameraFollower : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject car;
     public Vector3 offset;
     
     void LateUpdate()
     {
-        transform.position = player.transform.position + offset;
+        transform.position = car.transform.position + offset;
     }
 }

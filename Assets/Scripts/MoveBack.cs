@@ -6,11 +6,11 @@ public class MoveBack : MonoBehaviour
     public float mass = 1f;
     private float currentSpeed;
     private float baseSpeed;
+    private float zLimit = -15f; 
     
-    private PlayerController playerController; // อ้างอิงถึง PlayerController เพื่อตรวจสอบว่าเกมจบหรือยัง
+    private PlayerController playerController;
     void Start()
     {
-        // ค้นหา "Car" PlayerController มาใช้
         playerController = GameObject.Find("Car").GetComponent<PlayerController>();
         currentSpeed = speed;
         baseSpeed = speed;
@@ -18,10 +18,14 @@ public class MoveBack : MonoBehaviour
 
     void Update()
     {
-        // ถ้าเกมยังไม่จบ ให้วัตถุเคลื่อนที่ไปข้างหลังหาผู้เล่น
         if (!playerController.GetIsGameOver())
         {
             transform.Translate(Vector3.back * currentSpeed * Time.deltaTime);
+        }
+
+        if (transform.position.z < zLimit)
+        {
+            gameObject.SetActive(false);
         }
     }
 

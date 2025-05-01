@@ -10,11 +10,10 @@ public class UIBoosterManager : MonoBehaviour
     private bool isBoosted = false;
     
     public Image boosterRemaining;
-    private PlayerController playerController; // Reference ไปที่ PlayerController
+    private PlayerController playerController;
 
     private void Awake()
     {
-        // (ถ้ามี Instance อยู่แล้วให้ทำลายตัวใหม่)
         if (Instance == null)
         {
             Instance = this;
@@ -27,7 +26,6 @@ public class UIBoosterManager : MonoBehaviour
 
     private void Start()
     {
-        // ค้นหา "Car" PlayerController มาใช้
         playerController = GameObject.Find("Car").GetComponent<PlayerController>();
 
         if (boosterRemaining != null)
@@ -38,7 +36,6 @@ public class UIBoosterManager : MonoBehaviour
 
     private void Update()
     {
-        // ถ้าเกมจบแล้วไม่ต้องทำอะไรต่อ
         if (playerController.GetIsGameOver())
         {
             return;

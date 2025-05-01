@@ -1,29 +1,74 @@
+using System.IO;
 using TMPro;
 using UnityEngine;
 
 public class CoinCollection : MonoBehaviour
 {
-    private int coin = 0;
+    private int coin;
+    private int highCoin;
 
     public TextMeshProUGUI coinText;
+    public TextMeshProUGUI highCoinText;
+    
+    void Start()
+    {
+        // โหลดข้อมูล highCoin ตอนเริ่มเกม
+        highCoin = SaveSystem.LoadHighCoin().highCoin;
+        UpdateUI();
+    }
+    
+    private void UpdateUI()
+    {
+        if (coinText != null)
+            coinText.text = coin.ToString("D2");
+        if (highCoinText != null)
+            highCoinText.text = "COIN " + highCoin.ToString("D2");
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Coin"))
         {
             coin++;
-            coinText.text = "Coin: " + coin;
-            
-            Rigidbody coinRB = other.GetComponent<Rigidbody>();
-            if (coinRB != null)
+            UpdateUI();
+            // อัปเดต high coin ถ้าทำลายสถิติ
+            if (coin > highCoin)
             {
-                // ตั้งค่าการหมุนและแรงกระเด็นเมื่อเก็บเหรียญ
-                Vector3 angularVelocity = new Vector3(0, 20, 0); // หมุนรอบแกน Y
-                Vector3 linearVelocity = new Vector3(0, 2, 0); // กระเด็นขึ้นด้านบน
-                coinRB.angularVelocity = angularVelocity;
-                coinRB.AddForce(linearVelocity, ForceMode.Impulse);
+                highCoin = coin;
+                SaveSystem.SaveHighCoin(highCoin);
+                UpdateUI();
             }
-            Destroy(other.gameObject, 1f); // ทำลายเหรียญหลังจาก 1 วินาที (ให้มีเวลากระเด็นก่อนหาย)
+            other.gameObject.SetActive(false);
+        }
+    }
+    
+    [System.Serializable]
+    public class CoinData
+    {
+        public int highCoin;
+    }
+
+    public static class SaveSystem
+    {
+        private static string path = Application.persistentDataPath + "/highcoin.json";
+
+        public static void SaveHighCoin(int value)
+        {
+            CoinData data = new CoinData();
+            data.highCoin = value;
+
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(path, json);
+        }
+
+        public static CoinData LoadHighCoin()
+        {
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                return JsonUtility.FromJson<CoinData>(json);
+            }
+            return new CoinData();
         }
     }
 }

@@ -13,7 +13,7 @@ public class Booster : MonoBehaviour
             if (playerController != null)
             {
                 playerController.ActivateBooster(boostForce, boostDuration);
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }
