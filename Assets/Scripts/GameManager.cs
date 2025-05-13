@@ -16,11 +16,10 @@ public class GameManager : MonoBehaviour
     public Button creditButton;
     public Button backButton;
     
-    private PlayerController playerController; // Reference ไปที่ PlayerController
+    private PlayerController playerController;
 
     private void Awake()
     {
-        // (ถ้ามี Instance อยู่แล้วให้ทำลายตัวใหม่)
         if (Instance == null)
         {
             Instance = this;
@@ -30,15 +29,14 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         
-        gameOverPanel.SetActive(false); // ซ่อน Game Over Panel ตอนเริ่มเกม
+        gameOverPanel.SetActive(false);
     }
 
     private void Start()
     {
-        // ค้นหา "Car" PlayerController มาใช้
         playerController = GameObject.Find("Car").GetComponent<PlayerController>();
         
-        MainMenu(); // เริ่มเกมด้วย Main Menu
+        MainMenu();
         
         startButton.onClick.AddListener(StartGame);
         homeButton.onClick.AddListener(Home);
